@@ -23,7 +23,7 @@ If you're on **Windows or Linux** and need to check your system, reach out to Pe
 Open Terminal and paste:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/prosperity-solutions/axios-supply-chain-march-2026-checker/main/check.sh)
+bash <(curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/prosperity-solutions/axios-supply-chain-march-2026-checker/main/check.sh)
 ```
 
 The script will:
