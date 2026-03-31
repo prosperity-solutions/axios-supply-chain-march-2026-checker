@@ -104,6 +104,10 @@ plural() {
 preflight() {
   section "Preflight checks"
 
+  # Raise file descriptor limit — macOS defaults to 256 which is too low
+  # for deep directory scans with many process substitutions
+  ulimit -n 10240 2>/dev/null || ulimit -n 4096 2>/dev/null || true
+
   # Hard requirements
   if [[ "$(uname)" != "Darwin" ]]; then
     bail "This script requires macOS"
