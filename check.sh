@@ -1060,6 +1060,10 @@ main() {
           echo "Usage: ./check.sh --scan /path/to/directory"
           exit 1
         fi
+        if [ ! -d "$target_dir" ]; then
+          echo "Error: directory not found: $target_dir"
+          exit 1
+        fi
         ;;
       --help|-h)
         echo "Usage:"

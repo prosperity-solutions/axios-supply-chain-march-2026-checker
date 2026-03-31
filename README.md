@@ -100,14 +100,21 @@ At the end the script shows:
 
 If the script can't run on your system (missing tools, wrong OS), it shows a prominent banner asking you to reach out to Peter via Slack huddle for manual help.
 
-### Alternative usage
+### Scanning a directory of repos
+
+If you have a directory containing multiple cloned repos (e.g. you pulled all repos you have access to), use `--scan` to discover and check all of them at once:
 
 ```bash
-# Scan a specific git repo (including all worktrees)
-./check.sh /path/to/your/repo
+./check.sh --scan /path/to/directory-of-repos
+```
 
-# Discover and scan ALL repos inside a directory
-./check.sh --scan /path/to/directory
+This automatically finds all git repositories and node projects inside that directory, scans each one, and shows a progress counter (`[3/47]`) as it goes.
+
+### Other options
+
+```bash
+# Scan a single git repo (including all its worktrees)
+./check.sh /path/to/your/repo
 
 # System, cache, and global install checks only (no per-project scan)
 ./check.sh --system
