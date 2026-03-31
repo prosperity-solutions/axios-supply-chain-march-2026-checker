@@ -955,13 +955,15 @@ print_verdict() {
 
 # ── guided project scanning (mandatory in default mode) ──────────────────────
 guided_project_scan() {
-  # All reads use /dev/tty so the script works when piped via curl | bash
+  # All reads use /dev/tty so the script works when piped via curl | bash.
+  # Open it once on FD 3 and reuse — avoids exhausting file descriptors.
   if [ ! -e /dev/tty ]; then
     info "Non-interactive mode detected — defaulting to home directory scan"
     section "Auto-discovery: ${HOME}"
     discover_projects "$HOME" 8
     return
   fi
+  exec 3< /dev/tty
 
   local keep_scanning=1
 
@@ -976,7 +978,7 @@ guided_project_scan() {
     echo -e "  ${CYAN}4${RESET})  Type a path to a specific project"
     echo ""
     echo -n "  Choose [1-4] (press Enter for 1): "
-    read -r choice < /dev/tty
+    read -r choice <&3
 
     # Default to 1 on empty input (just pressing Enter)
     choice="${choice:-1}"
@@ -989,7 +991,7 @@ guided_project_scan() {
       2)
         echo ""
         echo -n "  Enter path to search: "
-        read -r custom_path < /dev/tty
+        read -r custom_path <&3
         custom_path="${custom_path/#\~/$HOME}"
         if [ -d "$custom_path" ]; then
           section "Auto-discovery: ${custom_path}"
@@ -1011,7 +1013,7 @@ guided_project_scan() {
       4)
         echo ""
         echo -n "  Enter path to project: "
-        read -r project_path < /dev/tty
+        read -r project_path <&3
         project_path="${project_path/#\~/$HOME}"
         if [ -d "$project_path" ]; then
           scan_git_repo "$project_path"
@@ -1028,12 +1030,14 @@ guided_project_scan() {
     echo ""
     echo -e "  ${BOLD}Would you like to scan another directory?${RESET}"
     echo -n "  [y/N]: "
-    read -r again < /dev/tty
+    read -r again <&3
     case "$again" in
       [yY]|[yY][eE][sS]) keep_scanning=1 ;;
       *) keep_scanning=0 ;;
     esac
   done
+
+  exec 3<&-  # close FD 3
 }
 
 # ── main ──────────────────────────────────────────────────────────────────────
