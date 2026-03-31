@@ -1053,11 +1053,20 @@ main() {
       --system)
         mode="system-only"
         ;;
+      --scan)
+        mode="scan"
+        target_dir="${2:-}"
+        if [ -z "$target_dir" ]; then
+          echo "Usage: ./check.sh --scan /path/to/directory"
+          exit 1
+        fi
+        ;;
       --help|-h)
         echo "Usage:"
-        echo "  ./check.sh              Guided mode (system check + mandatory project scan)"
-        echo "  ./check.sh /path/to/repo Scan a specific git repo + worktrees"
-        echo "  ./check.sh --system     Full-system scan only"
+        echo "  ./check.sh                    Guided mode (system check + mandatory project scan)"
+        echo "  ./check.sh /path/to/repo      Scan a specific git repo + worktrees"
+        echo "  ./check.sh --scan /path/to/dir  Discover and scan all repos in a directory"
+        echo "  ./check.sh --system           System, cache, and global checks only"
         echo ""
         exit 0
         ;;
@@ -1085,6 +1094,10 @@ main() {
   case "$mode" in
     repo)
       scan_git_repo "$target_dir"
+      ;;
+    scan)
+      section "Scanning all projects in: ${target_dir}"
+      discover_projects "$target_dir"
       ;;
     guided)
       echo ""

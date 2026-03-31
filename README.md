@@ -106,6 +106,9 @@ If the script can't run on your system (missing tools, wrong OS), it shows a pro
 # Scan a specific git repo (including all worktrees)
 ./check.sh /path/to/your/repo
 
+# Discover and scan ALL repos inside a directory
+./check.sh --scan /path/to/directory
+
 # System, cache, and global install checks only (no per-project scan)
 ./check.sh --system
 
