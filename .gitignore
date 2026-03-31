@@ -1,0 +1,13 @@
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# AI tools
+.cursor/
+.claude/
+
+# macOS
+.DS_Store
